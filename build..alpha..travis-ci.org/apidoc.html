@@ -121,6 +121,84 @@
 
     </ol></li>
 
+    <li class="apidocModuleLi"><a href="#apidoc.module.t.bfs">module t.bfs</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.t.bfs.bfs">
+            function <span class="apidocSignatureSpan">t.</span>bfs
+            <span class="apidocSignatureSpan">(node)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.t.dfs">module t.dfs</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.t.dfs.dfs">
+            function <span class="apidocSignatureSpan">t.</span>dfs
+            <span class="apidocSignatureSpan">(node)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.t.filter">module t.filter</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.t.filter.filter">
+            function <span class="apidocSignatureSpan">t.</span>filter
+            <span class="apidocSignatureSpan">(node)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.t.find">module t.find</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.t.find.find">
+            function <span class="apidocSignatureSpan">t.</span>find
+            <span class="apidocSignatureSpan">( tree )</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.t.map">module t.map</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.t.map.map">
+            function <span class="apidocSignatureSpan">t.</span>map
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.t.stroll">module t.stroll</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.t.stroll.stroll">
+            function <span class="apidocSignatureSpan">t.</span>stroll
+            <span class="apidocSignatureSpan">(tree1, tree2)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
 </ol></div>
 
 <div class="apidocSectionDiv">
@@ -459,6 +537,369 @@ arguments.
     </ul>
 
 
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.t.bfs" id="apidoc.module.t.bfs">module t.bfs</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.t.bfs.bfs" id="apidoc.element.t.bfs.bfs">
+        function <span class="apidocSignatureSpan">t.</span>bfs
+        <span class="apidocSignatureSpan">(node)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">bfs = function (node) {
+
+    var cur, callback, i, length, par, children,
+        isConfigSet = arguments.length === 3,
+        config = isConfigSet ? arguments[1] : {},
+        queue = isArray(node)? node.slice(0) : [node],
+        parents = [undefined],
+        childrenName = getChildrenName(config);
+
+    if (node == null) return node;
+
+    if (arguments.length &#x3e;= 3) {
+        config = arguments[1];
+        callback = arguments[2];
+    } else {
+        config = {};
+        callback = arguments[1];
+    }
+
+    while (queue.length) {
+        cur = queue.shift();
+        par = parents.shift();
+        callback.call(cur, cur, par);
+        children = cur[childrenName] || [];
+        for (i = 0, length = children.length; i &#x3c; length; i++) {
+            queue.push(children[i]);
+            parents.push(cur);
+        }
+    }
+
+    return node;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+the `t` interface is exported in either the browser or node.js. the library
+can be installed from [npm](http://search.npmjs.org/#/t):
+
+    $ npm install t
+
+available functions
+===================
+t.<span class="apidocCodeKeywordSpan">bfs</span>()
+-------
+perform a breadth-first search, executing the given callback at each node.
+
+t.bfs(node, [config], function(node, par, ctrl) {
+    /* ... */
+})
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.t.dfs" id="apidoc.module.t.dfs">module t.dfs</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.t.dfs.dfs" id="apidoc.element.t.dfs.dfs">
+        function <span class="apidocSignatureSpan">t.</span>dfs
+        <span class="apidocSignatureSpan">(node)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">dfs = function (node) {
+    var cur, par, children, ctrl, i, ret,
+        isConfigSet = arguments.length === 3,
+        nodes = isArray(node)? node.slice(0).reverse() : [node],
+        config = isConfigSet ? arguments[1] : {},
+        callback = arguments[isConfigSet ? 2 : 1],
+        parents = [],
+        childrenName = getChildrenName(config);
+    if (typeof nodes[0] === &#x27;undefined&#x27; &#x26;&#x26; nodes.length === 1) return;
+
+    if (config.order === &#x27;post&#x27;) {
+        ret = _dfsPostOrder(nodes, config, callback);
+        return isArray(node)? ret : ret[0];
+    }
+
+
+    for (i = nodes.length-1; i &#x3e;= 0; i--)
+        parents.push(undefined);
+
+    while (nodes.length &#x3e; 0) {
+        cur = nodes.pop();
+        par = parents.pop();
+
+        ctrl = {};
+        callback.call(cur, cur, par, ctrl);
+
+        if (ctrl.stop) break;
+
+        children = (cur &#x26;&#x26; cur[childrenName])? cur[childrenName] : [];
+
+        for (i = ctrl.cutoff? -1 : children.length-1; i &#x3e;= 0; i--) {
+            nodes.push(children[i]);
+            parents.push(cur);
+        }
+    }
+
+    return node;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+function to be executed at each node.  the arguments are:
+- `node`: the current node
+- `par`: the current node&#x27;s parent
+- `ctrl`: control object.  this doesn&#x27;t currently do anything.
+
+ returns: the first `node` argument
+
+t.<span class="apidocCodeKeywordSpan">dfs</span>()
+-------
+perform a depth-first search, executing the given callback at each node.
+
+t.dfs(node, [config], function(node, par, ctrl) {
+    /* ... */
+})
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.t.filter" id="apidoc.module.t.filter">module t.filter</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.t.filter.filter" id="apidoc.element.t.filter.filter">
+        function <span class="apidocSignatureSpan">t.</span>filter
+        <span class="apidocSignatureSpan">(node)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">filter = function (node) {
+    var isConfigSet = arguments.length === 3,
+        nodeFactory =  arguments[isConfigSet ? 2 : 1],
+        config = isConfigSet ? arguments[1] : {};
+    return t.map(node, {
+        filter: true,
+        childrenName: config.childrenName
+    }, nodeFactory);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+`map` function takes care of setting children.  the arguments are:
+- `node`: the current node
+- `par`: the current node&#x27;s parent. note that this is the parent from
+the new tree that&#x27;s being created.
+
+ returns: a new tree, mapped by the callback function
+
+t.<span class="apidocCodeKeywordSpan">filter</span>()
+----------
+given a tree, return a tree of the same structure made up of the objects
+returned by the callback which is executed at each node.  if, however, at a
+given node the callback returns a falsy value, then the current node and all
+of its descendents will be pruned from the output tree.
+
+t.filter(node, [config], function(node, par) {
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.t.find" id="apidoc.module.t.find">module t.find</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.t.find.find" id="apidoc.element.t.find.find">
+        function <span class="apidocSignatureSpan">t.</span>find
+        <span class="apidocSignatureSpan">( tree )</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">find = function ( tree ) {
+    var found,
+        isConfigSet = arguments.length === 3,
+        callback =  arguments[ isConfigSet ? 2 : 1],
+        config = isConfigSet ? arguments[1] : {};
+    t.dfs(tree, config, function(node, par, ctrl) {
+        if (callback.call(node, node, par)) {
+            ctrl.stop = true;
+            found = this;
+        }
+    });
+
+    return found;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+you can define the name of the children property with
+`config.childrenName`
+- `callback` (last argument):
+function to be executed at each node. the arguments are:
+- `node1`: the node from the first tree
+- `node2`: the node from the second tree
+
+t.<span class="apidocCodeKeywordSpan">find</span>()
+----------
+
+given a tree and a truth test, return the first node that responds with a
+truthy value
+
+t.find(tree, [config], function(node, par) {
+    /* ... */
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.t.map" id="apidoc.module.t.map">module t.map</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.t.map.map" id="apidoc.element.t.map.map">
+        function <span class="apidocSignatureSpan">t.</span>map
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">map = function () {
+    var node = arguments[0],
+        isConfigSet = arguments.length === 3,
+        config = isConfigSet ? arguments[1] : {},
+        filter = config.filter,
+        nodeFactory = arguments[isConfigSet ? 2 : 1],
+        ret = isArray(node)? [] : undefined,
+        last = function(l) { return l[l.length-1]; },
+        parentStack = [],
+        childrenName = getChildrenName(config);
+
+    t.dfs(node, config, function(n, par, ctrl) {
+        var curParent = last(parentStack),
+            newNode = nodeFactory(n, curParent? curParent.ret : undefined);
+
+        if (filter &#x26;&#x26; ! newNode) {
+            ctrl.cutoff = true;
+            if (curParent &#x26;&#x26; n === last(curParent.n[childrenName])) {
+                parentStack.pop();
+                if (curParent.ret[childrenName] &#x26;&#x26;
+                        ! curParent.ret[childrenName].length)
+                    delete curParent.ret[childrenName];
+            }
+            return;
+        }
+
+        if (! par) {
+            if (isArray(node))
+                ret.push(newNode);
+            else
+                ret = newNode;
+
+        } else {
+            curParent.ret[childrenName].push(newNode);
+
+            if (n === last(curParent.n[childrenName])) {
+                parentStack.pop();
+                if (curParent.ret[childrenName] &#x26;&#x26;
+                        ! curParent.ret[childrenName].length)
+                    delete curParent.ret[childrenName];
+            }
+        }
+
+        if (n[childrenName] &#x26;&#x26; n[childrenName].length) {
+            newNode[childrenName] = [];
+            parentStack.push({n: n, ret: newNode});
+        }
+    });
+
+    return ret;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+the search, setting the `cutoff` property of this will not visit any
+children of this node
+- `ret`: return values of child nodes.  this is only set if `dfs()` is
+called with the `order` property set to `post`.
+
+ returns: the first `node` argument
+
+t.<span class="apidocCodeKeywordSpan">map</span>()
+-------
+given a tree, return a tree of the same structure made up of the objects
+returned by the callback which is executed at each node.  think of the
+`underscore`&#x27;s `_.map()` function, or python&#x27;s `map()`
+
+t.map(node, [config], function(node, par) {
+    /* ... */
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.t.stroll" id="apidoc.module.t.stroll">module t.stroll</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.t.stroll.stroll" id="apidoc.element.t.stroll.stroll">
+        function <span class="apidocSignatureSpan">t.</span>stroll
+        <span class="apidocSignatureSpan">(tree1, tree2)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">stroll = function (tree1, tree2) {
+    var i, node2,
+        isConfigSet = arguments.length === 4,
+        callback =  arguments[ isConfigSet ? 3 : 2],
+        config = isConfigSet ? arguments[2] : {},
+        childrenName = getChildrenName(config),
+        nodes2 = isArray(tree2)? tree2.slice(0).reverse() : [tree2],
+        len = function(a) { return typeof a === &#x27;undefined&#x27;? 0 : a.length; };
+
+    t.dfs(tree1, config, function(node1, par, ctrl) {
+        node2 = nodes2.pop();
+
+        callback(node1, node2);
+
+        if (node1 &#x26;&#x26; node2 &#x26;&#x26;
+                len(node1[childrenName]) === len(node2[childrenName]))
+            for (i = (node2[childrenName] || []).length-1; i &#x3e;= 0; i--)
+                nodes2.push(node2[childrenName][i]);
+        else
+            ctrl.cutoff = true;
+
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+     arguments are:
+     - `node`: the current node
+     - `par`: the current node&#x27;s parent. note that this is the parent from
+     the new tree that&#x27;s being created.
+
+returns: a new tree, filtered by the callback function
+
+t.<span class="apidocCodeKeywordSpan">stroll</span>()
+----------
+
+_a walk through the trees..._
+
+given two trees of similar structure, traverse both trees at the same time,
+executing the given callback with the pair of corresponding nodes as
+arguments.
+...</pre></li>
+    </ul>
 
 
 </div>
