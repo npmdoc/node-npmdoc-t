@@ -1,7 +1,7 @@
 {
     "author": "kai zhu <kaizhu256@gmail.com>",
     "buildNpmdoc": "t",
-    "description": "api documentation for t (v0.5.1) [![npm package](https://img.shields.io/npm/v/npmdoc-t.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-t) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-t.svg)](https://travis-ci.org/npmdoc/node-npmdoc-t)",
+    "description": "#### basic api documentation for  t (v0.5.1)  [![npm package](https://img.shields.io/npm/v/npmdoc-t.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-t) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-t.svg)](https://travis-ci.org/npmdoc/node-npmdoc-t)",
     "devDependencies": {
         "electron-lite": "kaizhu256/node-electron-lite#alpha",
         "t": "*",

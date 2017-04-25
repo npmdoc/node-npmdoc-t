@@ -1,4 +1,7 @@
-# api documentation for  t (v0.5.1)  [![npm package](https://img.shields.io/npm/v/npmdoc-t.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-t) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-t.svg)](https://travis-ci.org/npmdoc/node-npmdoc-t)
+# npmdoc-t
+
+#### basic api documentation for  t (v0.5.1)  [![npm package](https://img.shields.io/npm/v/npmdoc-t.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-t) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-t.svg)](https://travis-ci.org/npmdoc/node-npmdoc-t)
+
 #### tree traversal and manipulation
 
 [![NPM](https://nodei.co/npm/t.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/t)
@@ -51,7 +54,8 @@
     "scripts": {
         "test": "grunt test"
     },
-    "version": "0.5.1"
+    "version": "0.5.1",
+    "bin": {}
 }
 ```
 
